@@ -12,25 +12,31 @@ function updateClock(){
     let secondAngle = seconds * 6;
 
 
-    document.getElementById("hourHand")
-    .setAttribute(
-        "rotation",
-        `0 0 ${-hourAngle}`
-    );
+    const hourHand = document.getElementById("hourHand");
+    const minuteHand = document.getElementById("minuteHand");
+    const secondHand = document.getElementById("secondHand");
 
 
-    document.getElementById("minuteHand")
-    .setAttribute(
-        "rotation",
-        `0 0 ${-minuteAngle}`
-    );
+    if(hourHand && minuteHand && secondHand){
+
+        hourHand.setAttribute(
+            "rotation",
+            `0 0 ${-hourAngle}`
+        );
 
 
-    document.getElementById("secondHand")
-    .setAttribute(
-        "rotation",
-        `0 0 ${-secondAngle}`
-    );
+        minuteHand.setAttribute(
+            "rotation",
+            `0 0 ${-minuteAngle}`
+        );
+
+
+        secondHand.setAttribute(
+            "rotation",
+            `0 0 ${-secondAngle}`
+        );
+
+    }
 
 
     document.getElementById("clock").textContent =
@@ -47,30 +53,35 @@ updateClock();
 
 document.addEventListener("DOMContentLoaded",()=>{
 
-const overlay=document.getElementById("overlay");
+    const overlay = document.getElementById("overlay");
+    const target = document.getElementById("ar-target");
 
-const target=document.getElementById("ar-target");
+
+    if(target){
+
+        target.addEventListener(
+            "targetFound",
+            ()=>{
+                overlay.style.display="block";
+            }
+        );
 
 
-target.addEventListener(
-"targetFound",
-()=>{
-overlay.style.display="block";
+        target.addEventListener(
+            "targetLost",
+            ()=>{
+                overlay.style.display="none";
+            }
+        );
+
+    }
+
 });
 
-
-target.addEventListener(
-"targetLost",
-()=>{
-overlay.style.display="none";
-});
-
-
-});
 
 
 function openWebsite(){
 
-window.location.href="main.html";
+    window.location.href="main.html";
 
 }
