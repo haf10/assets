@@ -17,15 +17,22 @@
         <button onclick="openWebsite()">Enter Website</button>
     </div>
 
- <a-scene
+<a-scene
     embedded
     mindar-image="imageTargetSrc: ./qr.mind; autoStart: true;"
-    vr-mode-ui="enabled:false;">
+    vr-mode-ui="enabled:false;"
+    renderer="colorManagement: true; physicallyCorrectLights: true;">
 
 
-<a-camera position="0 0 0"></a-camera>
+<a-camera position="0 0 0"
+    look-controls="enabled:false">
+</a-camera>
 
-
+<a-light 
+    type="ambient" 
+    intensity="1">
+</a-light>
+    
 <a-entity
     id="ar-target"
     mindar-image-target="targetIndex:0">
@@ -51,36 +58,34 @@
 
 <!-- Hour hand -->
 <a-box
-    id="hourHand"
-    position="0 0 0.1"
-    width="0.05"
-    height="0.35"
-    depth="0.03"
-    color="black">
+id="hourHand"
+position="0 0.18 0.1"
+width="0.05"
+height="0.35"
+depth="0.03"
+color="black">
 </a-box>
 
 
 <!-- Minute hand -->
 <a-box
-    id="minuteHand"
-    position="0 0 0.12"
-    width="0.04"
-    height="0.5"
-    depth="0.03"
-    color="blue">
+id="minuteHand"
+position="0 0.25 0.12"
+width="0.04"
+height="0.5"
+depth="0.03"
+color="blue">
 </a-box>
-
 
 <!-- Second hand -->
 <a-box
-    id="secondHand"
-    position="0 0 0.15"
-    width="0.02"
-    height="0.6"
-    depth="0.02"
-    color="red">
+id="secondHand"
+position="0 0.3 0.15"
+width="0.02"
+height="0.6"
+depth="0.02"
+color="red">
 </a-box>
-
 
 </a-entity>
 
