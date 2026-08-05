@@ -1,0 +1,47 @@
+body {
+    margin: 0;  
+    overflow: hidden;
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+h1 {
+    text-align: center;
+    font-weight: normal;
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+}
+
+#clock {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+}
+
+button {
+    background-color: #04AA6D;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+#overlay {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    background: rgba(0,0,0,0.75);
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    min-width: 250px;
+    display: none; /* Keeps UI hidden until QR code is scanned */
+}
