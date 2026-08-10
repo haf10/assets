@@ -1,78 +1,141 @@
 function updateClock() {
 
-```
-const now = new Date();
+    const now = new Date();
 
-let hours = now.getHours();
-let minutes = now.getMinutes();
-let seconds = now.getSeconds();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
 
-let hourAngle = (hours % 12) * 30 + minutes * 0.5;
-let minuteAngle = minutes * 6;
-let secondAngle = seconds * 6;
 
-const hourHand = document.getElementById("hourHand");
-const minuteHand = document.getElementById("minuteHand");
-const secondHand = document.getElementById("secondHand");
+    // Calculate clock hand angles
 
-if (hourHand && minuteHand && secondHand) {
+    const hourAngle =
+        (hours % 12) * 30 +
+        minutes * 0.5;
 
-    hourHand.setAttribute(
-        "rotation",
-        `0 0 ${-hourAngle}`
-    );
+    const minuteAngle =
+        minutes * 6;
 
-    minuteHand.setAttribute(
-        "rotation",
-        `0 0 ${-minuteAngle}`
-    );
+    const secondAngle =
+        seconds * 6;
 
-    secondHand.setAttribute(
-        "rotation",
-        `0 0 ${-secondAngle}`
-    );
+
+    // Get AR clock hands
+
+    const hourHand =
+        document.getElementById("hourHand");
+
+    const minuteHand =
+        document.getElementById("minuteHand");
+
+    const secondHand =
+        document.getElementById("secondHand");
+
+
+    // Rotate the hands
+
+    if (hourHand) {
+
+        hourHand.setAttribute(
+            "rotation",
+            `0 0 ${-hourAngle}`
+        );
+
+    }
+
+
+    if (minuteHand) {
+
+        minuteHand.setAttribute(
+            "rotation",
+            `0 0 ${-minuteAngle}`
+        );
+
+    }
+
+
+    if (secondHand) {
+
+        secondHand.setAttribute(
+            "rotation",
+            `0 0 ${-secondAngle}`
+        );
+
+    }
+
+
+    // Update digital clock
+
+    const clock =
+        document.getElementById("clock");
+
+    if (clock) {
+
+        clock.textContent =
+            now.toLocaleTimeString();
+
+    }
+
 }
 
-document.getElementById("clock").textContent =
-    now.toLocaleTimeString();
-```
 
-}
-
-setInterval(updateClock, 1000);
-
+// Update immediately
 updateClock();
 
-document.addEventListener("DOMContentLoaded", () => {
 
-```
-const overlay = document.getElementById("overlay");
-const target = document.getElementById("ar-target");
+// Update every second
+setInterval(updateClock, 1000);
 
-if (target) {
 
-    target.addEventListener(
-        "targetFound",
-        () => {
-            overlay.style.display = "block";
+
+// Show information when AR target is detected
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const overlay =
+            document.getElementById("overlay");
+
+        const target =
+            document.getElementById("ar-target");
+
+
+        if (!target) {
+            return;
         }
-    );
 
-    target.addEventListener(
-        "targetLost",
-        () => {
-            overlay.style.display = "none";
-        }
-    );
-}
-```
 
-});
+        // Marker found
 
-function openWebsite() {
+        target.addEventListener(
+            "targetFound",
+            () => {
 
-```
-window.location.href = "main.html";
-```
+                console.log("AR target found");
 
-}
+                if (overlay) {
+                    overlay.style.display = "block";
+                }
+
+            }
+        );
+
+
+        // Marker lost
+
+        target.addEventListener(
+            "targetLost",
+            () => {
+
+                console.log("AR target lost");
+
+                if (overlay) {
+                    overlay.style.display = "none";
+                }
+
+            }
+        );
+
+    }
+);
