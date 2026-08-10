@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Camera Test</title>
+  <style>
+    html,body{height:100%;margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-serif}
+    #controls{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:99999;display:flex;gap:8px}
+    button{padding:10px 14px;border-radius:8px;border:none;background:#0b84ff;color:#fff;font-size:16px}
+    #status{position:fixed;left:10px;top:10px;z-index:99999;background:rgba(0,0,0,0.6);padding:8px 10px;border-radius:6px}
+    video{width:100vw;height:100vh;object-fit:cover;background:#000;display:block}
+  </style>
+</head>
+<body>
+  <div id="status">Ready. Tap Start Camera.</div>
+  <div id="controls">
+    <button id="startBtn">Start Camera</button>
+    <button id="stopBtn" disabled>Stop</button>
+  </div>
+
+  <video id="video" playsinline autoplay muted></video>
+
+  <script>
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const status = document.getElementById('status');
+    const video = document.getElementById('video');
+    let stream = null;
+
+    function log(msg){ console.log(msg); status.textContent = msg; }
+
+    async function startCamera(){
+      startBtn.disabled = true;
+      log('Requesting camera...');
+      try{
+        // Prefer rear camera when available
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+        video.srcObject = stream;
+        stopBtn.disabled = false;
+        log('Camera started. You should see the live feed.');
+      }catch(err){
+        console.error('getUserMedia error:', err);
+        log('Error: ' + (err.name || err.message));
+        startBtn.disabled = false;
+        // Helpful hints for common errors
+        if(err.name === 'NotAllowedError' || err.name === 'SecurityError'){
+          log('Permission denied. Allow camera in site settings.');
+        }else if(err.name === 'NotFoundError'){
+          log('No camera found on this device.');
+        }
+      }
+    }
+
+    function stopCamera(){
+      if(stream){
+        stream.getTracks().forEach(t => t.stop());
+        stream = null;
+        video.srcObject = null;
+        stopBtn.disabled = true;
+        startBtn.disabled = false;
+        log('Camera stopped.');
+      }
+    }
+
+    startBtn.addEventListener('click', async () => {
+      // run inside user gesture to satisfy browser autoplay/policy
+      await startCamera();
+    });
+
+    stopBtn.addEventListener('click', () => stopCamera());
+
+    // Quick permission state check (may be unavailable in some browsers)
+    if(navigator.permissions && navigator.permissions.query){
+      navigator.permissions.query({ name: 'camera' }).then(p => {
+        console.log('camera permission state', p.state);
+        if(p.state === 'denied'){
+          log('Camera permission already denied. Go to site settings to allow.');
+        }
+        p.onchange = () => console.log('permission changed', p.state);
+      }).catch(e => console.log('permission query error', e));
+    }
+
+    // Also add a helper to test getUserMedia quickly from console
+    window._quickGumTest = function(){
+      return navigator.mediaDevices.getUserMedia({video:true}).then(s=>{ console.log('GUM OK', s); s.getTracks().forEach(t=>t.stop()); return true }).catch(e=>{ console.error('GUM ERR', e); throw e });
+    }
+  </script>
+</body>
+</html>
