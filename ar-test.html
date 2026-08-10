@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MindAR Minimal Test</title>
+
+  <!-- A-Frame and MindAR (same libs used in your repo) -->
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    html,body { margin:0; height:100%; background:#000; font-family:Arial,Helvetica,sans-serif; }
+    a-scene { position:fixed !important; top:0; left:0; width:100vw !important; height:100vh !important; }
+    #startBtn {
+      position:fixed; left:50%; transform:translateX(-50%); bottom:28px;
+      z-index:99999; padding:10px 16px; font-size:16px; border-radius:8px;
+      background:#0b84ff; color:#fff; border:none;
+    }
+    #status { position:fixed; left:10px; top:10px; z-index:99999; color:#fff; font-size:14px; background:rgba(0,0,0,0.6); padding:8px 10px; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <div id="status">Ready. Tap Start AR.</div>
+  <button id="startBtn">Start AR</button>
+
+  <!-- MindAR scene: autoStart disabled so we can start on user gesture -->
+  <a-scene
+    embedded
+    mindar-image="imageTargetSrc: ./qr.mind; autoStart: false; uiScanning: true; uiLoading: true;"
+    vr-mode-ui="enabled: false"
+    renderer="colorManagement: true;"
+  >
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <!-- AR target entity index 0 -->
+    <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
+      <!-- simple visible content to confirm camera + tracking -->
+      <a-box position="0 0 0.1" depth="0.02" height="0.18" width="0.18" color="#4CAF50"></a-box>
+      <a-text value="Tracked" color="#fff" align="center" position="0 -0.15 0.1" width="1.2"></a-text>
+    </a-entity>
+  </a-scene>
+
+  <script>
+    const startBtn = document.getElementById('startBtn');
+    const status = document.getElementById('status');
+
+    function logStatus(msg) {
+      console.log(msg);
+      status.textContent = msg;
+    }
+
+    // Listen for target events to show feedback
+    document.addEventListener('DOMContentLoaded', () => {
+      const target = document.getElementById('ar-target');
+      if (!target) return;
+      target.addEventListener('targetFound', () => logStatus('Target found'));
+      target.addEventListener('targetLost', () => logStatus('Target lost'));
+    });
+
+    // Start MindAR on user gesture - avoids autoplay / permission blocking
+    startBtn.addEventListener('click', async () => {
+      startBtn.disabled = true;
+      logStatus('Starting AR...');
+
+      const scene = document.querySelector('a-scene');
+
+      try {
+        // Preferred: try starting the MindAR system
+        if (scene && scene.systems && scene.systems['mindar-image-system'] && typeof scene.systems['mindar-image-system'].start === 'function') {
+          await scene.systems['mindar-image-system'].start();
+          logStatus('AR started (system).');
+        } else if (scene && scene.components && scene.components['mindar-image'] && typeof scene.components['mindar-image'].start === 'function') {
+          // Fallback: start component if system API not present
+          await scene.components['mindar-image'].start();
+          logStatus('AR started (component).');
+        } else {
+          throw new Error('MindAR start API not found on the scene.');
+        }
+        // Hide start button after starting
+        startBtn.style.display = 'none';
+      } catch (err) {
+        console.error('Error starting MindAR:', err);
+        logStatus('Error starting AR: ' + (err.message || err));
+        startBtn.disabled = false;
+      }
+    });
+
+    // Helpful check: ensure the target file is reachable
+    fetch('./qr.mind', { method: 'HEAD' }).then(res => {
+      if (!res.ok) console.warn('qr.mind not reachable (status ' + res.status + ')');
+    }).catch(e => {
+      console.warn('Could not fetch qr.mind:', e);
+    });
+  </script>
+</body>
+</html>
