@@ -1,81 +1,63 @@
 html,
 body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: black;
-    font-family: "Source Sans Pro", sans-serif;
+margin: 0;
+padding: 0;
+width: 100%;
+height: 100%;
+overflow: hidden;
+background: black;
+font-family: "Source Sans Pro", sans-serif;
 }
 
-
-/* Make the A-Frame scene fill the phone screen */
 a-scene {
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    width: 100vw !important;
-    height: 100vh !important;
+position: fixed !important;
+top: 0;
+left: 0;
+width: 100vw !important;
+height: 100vh !important;
 }
 
-
-/* Hide the A-Frame VR button */
-.a-enter-vr {
-    display: none !important;
-}
-
-
-/* Hide unnecessary A-Frame UI */
+.a-enter-vr,
 .a-enter-ar {
-    display: none !important;
+display: none !important;
 }
 
-
-/* Clock information */
 #overlay {
-    position: fixed;
+position: fixed;
+bottom: 40px;
+left: 50%;
 
-    bottom: 40px;
-    left: 50%;
+```
+transform: translateX(-50%);
 
-    transform: translateX(-50%);
+z-index: 9999;
 
-    z-index: 9999;
+background: rgba(0, 0, 0, 0.75);
+color: white;
 
-    background: rgba(0, 0, 0, 0.75);
+padding: 15px 25px;
 
-    color: white;
+border-radius: 15px;
 
-    padding: 15px 25px;
+text-align: center;
 
-    border-radius: 15px;
+min-width: 200px;
 
-    text-align: center;
+box-sizing: border-box;
 
-    min-width: 200px;
+display: none;
+```
 
-    box-sizing: border-box;
-
-    display: none;
 }
 
-
-/* Title */
 h1 {
-    margin: 0 0 5px 0;
-
-    font-size: 1.2rem;
-
-    font-weight: normal;
+margin: 0 0 5px 0;
+font-size: 1.2rem;
+font-weight: normal;
 }
 
-
-/* Digital clock */
 #clock {
-    margin: 5px 0;
-
-    font-size: 28px;
-
-    font-weight: bold;
+margin: 5px 0;
+font-size: 28px;
+font-weight: bold;
 }
