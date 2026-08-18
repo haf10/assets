@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Updated viewport tag to prevent accidental mobile zooming -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <title>AR Clock Test</title>
 
@@ -12,8 +13,8 @@
 
 <body>
 
+    <!-- Removed the "embedded" attribute here -->
     <a-scene
-        embedded
         mindar-image="imageTargetSrc: ./qr.mind;"
         color-space="sRGB"
         renderer="colorManagement: true"
