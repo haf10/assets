@@ -1,179 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AR Clock Test</title>
+function updateClock() {
 
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000000 !important;
-            overflow: hidden;
-            font-family: "Source Sans Pro", sans-serif;
+    const now = new Date();
+
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+
+
+    // Calculate clock hand angles
+
+    const hourAngle =
+        (hours % 12) * 30 +
+        minutes * 0.5;
+
+    const minuteAngle =
+        minutes * 6;
+
+    const secondAngle =
+        seconds * 6;
+
+
+    // Get AR clock hands
+
+    const hourHand =
+        document.getElementById("hourHand");
+
+    const minuteHand =
+        document.getElementById("minuteHand");
+
+    const secondHand =
+        document.getElementById("secondHand");
+
+
+    // Rotate the hands
+
+    if (hourHand) {
+
+        hourHand.setAttribute(
+            "rotation",
+            `0 0 ${-hourAngle}`
+        );
+
+    }
+
+
+    if (minuteHand) {
+
+        minuteHand.setAttribute(
+            "rotation",
+            `0 0 ${-minuteAngle}`
+        );
+
+    }
+
+
+    if (secondHand) {
+
+        secondHand.setAttribute(
+            "rotation",
+            `0 0 ${-secondAngle}`
+        );
+
+    }
+
+
+    // Update digital clock
+
+    const clock =
+        document.getElementById("clock");
+
+    if (clock) {
+
+        clock.textContent =
+            now.toLocaleTimeString();
+
+    }
+
+}
+
+
+// Update immediately
+updateClock();
+
+
+// Update every second
+setInterval(updateClock, 1000);
+
+
+
+// Show information when AR target is detected
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const overlay =
+            document.getElementById("overlay");
+
+        const target =
+            document.getElementById("ar-target");
+
+
+        if (!target) {
+            return;
         }
 
-        html.a-fullscreen,
-        body.a-fullscreen {
-            background-color: #000000 !important;
-            height: 100vh !important;
-            width: 100vw !important;
-        }
 
-        a-scene,
-        .a-canvas {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-        }
+        // Marker found
 
-        /* Fixed video styling so the camera feed shows up properly */
-        video {
-            width: 100vw !important;
-            height: 100vh !important;
-            object-fit: cover !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
+        target.addEventListener(
+            "targetFound",
+            () => {
 
-        .a-enter-vr,
-        .a-enter-ar {
-            display: none !important;
-        }
-
-        #overlay {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-            background: rgba(0, 0, 0, 0.75);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 15px;
-            text-align: center;
-            min-width: 200px;
-            box-sizing: border-box;
-            display: none;
-        }
-
-        h1 {
-            margin: 0 0 5px 0;
-            font-size: 1.2rem;
-            font-weight: normal;
-        }
-
-        #clock {
-            margin: 5px 0;
-            font-size: 28px;
-            font-weight: bold;
-        }
-    </style>
-
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-</head>
-
-<body>
-
-    <div id="overlay">
-        <h1>Current Time</h1>
-        <div id="clock">00:00:00</div>
-    </div>
-
-    <a-scene
-        mindar-image="imageTargetSrc: ./qr.mind;"
-        color-space="sRGB"
-        renderer="colorManagement: true"
-        vr-mode-ui="enabled: false"
-        device-orientation-permission-ui="enabled: false">
-
-        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-
-        <!-- Added id="ar-target" so your JS overlay script can find it -->
-        <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
-            
-            <!-- Clock Hands (Make sure you add these if you want the hands to rotate!) -->
-            <a-entity id="hourHand"></a-entity>
-            <a-entity id="minuteHand"></a-entity>
-            <a-entity id="secondHand"></a-entity>
-
-            <a-circle
-                position="0 0 0"
-                rotation="-90 0 0"
-                radius="0.5"
-                color="#FFFFFF">
-            </a-circle>
-        </a-entity>
-
-    </a-scene>
-
-    <script>
-        function updateClock() {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
-
-            const hourAngle = (hours % 12) * 30 + minutes * 0.5;
-            const minuteAngle = minutes * 6;
-            const secondAngle = seconds * 6;
-
-            const hourHand = document.getElementById("hourHand");
-            const minuteHand = document.getElementById("minuteHand");
-            const secondHand = document.getElementById("secondHand");
-
-            if (hourHand) {
-                hourHand.setAttribute("rotation", `0 0 ${-hourAngle}`);
-            }
-            if (minuteHand) {
-                minuteHand.setAttribute("rotation", `0 0 ${-minuteAngle}`);
-            }
-            if (secondHand) {
-                secondHand.setAttribute("rotation", `0 0 ${-secondAngle}`);
-            }
-
-            const clock = document.getElementById("clock");
-            if (clock) {
-                clock.textContent = now.toLocaleTimeString();
-            }
-        }
-
-        updateClock();
-        setInterval(updateClock, 1000);
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const overlay = document.getElementById("overlay");
-            const target = document.getElementById("ar-target");
-
-            if (!target) {
-                return;
-            }
-
-            target.addEventListener("targetFound", () => {
                 console.log("AR target found");
+
                 if (overlay) {
                     overlay.style.display = "block";
                 }
-            });
 
-            target.addEventListener("targetLost", () => {
+            }
+        );
+
+
+        // Marker lost
+
+        target.addEventListener(
+            "targetLost",
+            () => {
+
                 console.log("AR target lost");
+
                 if (overlay) {
                     overlay.style.display = "none";
                 }
-            });
-        });
-    </script>
 
-</body>
-</html>
+            }
+        );
+
+    }
+);
