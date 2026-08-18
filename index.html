@@ -12,37 +12,39 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #000000 !important;
+            background-color: #000000;
             overflow: hidden;
             font-family: "Source Sans Pro", sans-serif;
         }
 
-        html.a-fullscreen,
-        body.a-fullscreen {
-            background-color: #000000 !important;
-            height: 100vh !important;
-            width: 100vw !important;
+        a-scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
         }
 
-        a-scene,
+        /* Forces the camera video to fill the screen correctly */
+        video {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            object-fit: cover !important;
+            z-index: 0 !important;
+        }
+
+        /* Ensures the 3D canvas sits on top of the video */
         .a-canvas {
             position: absolute !important;
             top: 0 !important;
             left: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
-        }
-
-        /* Fixed video styling so the camera feed shows up properly */
-        video {
-            width: 100vw !important;
-            height: 100vh !important;
-            object-fit: cover !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            margin: 0 !important;
-            padding: 0 !important;
+            z-index: 1 !important;
+            pointer-events: none;
         }
 
         .a-enter-vr,
@@ -93,16 +95,13 @@
     <a-scene
         mindar-image="imageTargetSrc: ./qr.mind;"
         color-space="sRGB"
-        renderer="colorManagement: true"
+        renderer="colorManagement: true, logarithmicDepthBuffer: true"
         vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false">
 
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-        <!-- Added id="ar-target" so your JS overlay script can find it -->
         <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
-            
-            <!-- Clock Hands (Make sure you add these if you want the hands to rotate!) -->
             <a-entity id="hourHand"></a-entity>
             <a-entity id="minuteHand"></a-entity>
             <a-entity id="secondHand"></a-entity>
@@ -118,6 +117,20 @@
     </a-scene>
 
     <script>
+        // Force video attributes programmatically once MindAR injects the video tag
+        window.addEventListener('DOMContentLoaded', () => {
+            const observer = new MutationObserver((mutations, obs) => {
+                const videoEl = document.querySelector('video');
+                if (videoEl) {
+                    videoEl.setAttribute('autoplay', '');
+                    videoEl.setAttribute('muted', '');
+                    videoEl.setAttribute('playsinline', '');
+                    obs.disconnect();
+                }
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+        });
+
         function updateClock() {
             const now = new Date();
             const hours = now.getHours();
@@ -132,20 +145,12 @@
             const minuteHand = document.getElementById("minuteHand");
             const secondHand = document.getElementById("secondHand");
 
-            if (hourHand) {
-                hourHand.setAttribute("rotation", `0 0 ${-hourAngle}`);
-            }
-            if (minuteHand) {
-                minuteHand.setAttribute("rotation", `0 0 ${-minuteAngle}`);
-            }
-            if (secondHand) {
-                secondHand.setAttribute("rotation", `0 0 ${-secondAngle}`);
-            }
+            if (hourHand) hourHand.setAttribute("rotation", `0 0 ${-hourAngle}`);
+            if (minuteHand) minuteHand.setAttribute("rotation", `0 0 ${-minuteAngle}`);
+            if (secondHand) secondHand.setAttribute("rotation", `0 0 ${-secondAngle}`);
 
             const clock = document.getElementById("clock");
-            if (clock) {
-                clock.textContent = now.toLocaleTimeString();
-            }
+            if (clock) clock.textContent = now.toLocaleTimeString();
         }
 
         updateClock();
@@ -155,22 +160,14 @@
             const overlay = document.getElementById("overlay");
             const target = document.getElementById("ar-target");
 
-            if (!target) {
-                return;
-            }
+            if (!target) return;
 
             target.addEventListener("targetFound", () => {
-                console.log("AR target found");
-                if (overlay) {
-                    overlay.style.display = "block";
-                }
+                if (overlay) overlay.style.display = "block";
             });
 
             target.addEventListener("targetLost", () => {
-                console.log("AR target lost");
-                if (overlay) {
-                    overlay.style.display = "none";
-                }
+                if (overlay) overlay.style.display = "none";
             });
         });
     </script>
