@@ -12,7 +12,7 @@
 
     <div id="overlay">
         <h1>Current Time</h1>
-        <div id="clock">00:00:00</div>
+        <div id="clock">Loading...</div>
     </div>
 
     <a-scene
@@ -25,23 +25,39 @@
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
-            <a-ring position="0 0 0" rotation="-90 0 0" radius-inner="0.6" radius-outer="0.65" color="#333333"></a-ring>
-            <a-circle position="0 0 -0.001" rotation="-90 0 0" radius="0.6" color="#FFFFFF" opacity="0.9"></a-circle>
-            <a-cylinder position="0 0.01 0" rotation="90 0 0" radius="0.03" height="0.02" color="#111111"></a-cylinder>
+            
+            <a-circle position="0 0 0" radius="0.5" color="#FAFAFA"></a-circle>
+            <a-ring position="0 0 0.005" radius-inner="0.5" radius-outer="0.53" color="#333333"></a-ring>
 
-            <a-entity id="hourHand" position="0 0.015 0" rotation="0 0 0">
-                <a-box position="0 0.15 0" width="0.04" height="0.3" depth="0.01" color="#111111"></a-box>
+            <a-entity rotation="0 0 0"><a-box position="0 0.43 0.01" width="0.02" height="0.08" depth="0.01" color="#333333"></a-box></a-entity>
+            <a-entity rotation="0 0 -30"><a-box position="0 0.44 0.01" width="0.01" height="0.04" depth="0.01" color="#888888"></a-box></a-entity>
+            <a-entity rotation="0 0 -60"><a-box position="0 0.44 0.01" width="0.01" height="0.04" depth="0.01" color="#888888"></a-box></a-entity>
+            <a-entity rotation="0 0 -90"><a-box position="0 0.43 0.01" width="0.02" height="0.08" depth="0.01" color="#333333"></a-box></a-entity>
+            <a-entity rotation="0 0 -120"><a-box position="0 0.44 0.01" width="0.01" height="0.04" depth="0.01" color="#888888"></a-box></a-entity>
+            <a-entity rotation="0 0 -150"><a-box position="0 0.44 0.01" width="0.01" height="0.04" depth="0.01" color="#888888"></a-box></a-entity>
+            <a-entity rotation="0 0 -180"><a-box position="0 0.43 0.01" width="0.02" height="0.08" depth="0.01" color="#333333"></a-box></a-entity>
+            <a-entity rotation="0 0 -210"><a-box position="0 0.44 0.01" width="0.01" height="0.04" depth="0.01" color="#888888"></a-box></a-entity>
+            <a-entity rotation="0 0 -240"><a-box position="0 0.44 0.01" width="0.01" height="0.04" depth="0.01" color="#888888"></a-box></a-entity>
+            <a-entity rotation="0 0 -270"><a-box position="0 0.43 0.01" width="0.02" height="0.08" depth="0.01" color="#333333"></a-box></a-entity>
+            <a-entity rotation="0 0 -300"><a-box position="0 0.44 0.01" width="0.01" height="0.04" depth="0.01" color="#888888"></a-box></a-entity>
+            <a-entity rotation="0 0 -330"><a-box position="0 0.44 0.01" width="0.01" height="0.04" depth="0.01" color="#888888"></a-box></a-entity>
+
+            <a-entity id="hourHand" position="0 0 0.02" rotation="0 0 0">
+                <a-box position="0 0.12 0" width="0.035" height="0.25" depth="0.01" color="#222222"></a-box>
             </a-entity>
 
-            <a-entity id="minuteHand" position="0 0.02 0" rotation="0 0 0">
-                <a-box position="0 0.22 0" width="0.025" height="0.44" depth="0.01" color="#333333"></a-box>
+            <a-entity id="minuteHand" position="0 0 0.03" rotation="0 0 0">
+                <a-box position="0 0.18 0" width="0.025" height="0.38" depth="0.01" color="#444444"></a-box>
             </a-entity>
 
-            <a-entity id="secondHand" position="0 0.025 0" rotation="0 0 0">
-                <a-box position="0 0.25 0" width="0.01" height="0.5" depth="0.005" color="#E74C3C"></a-box>
+            <a-entity id="secondHand" position="0 0 0.04" rotation="0 0 0">
+                <a-box position="0 0.20 0" width="0.01" height="0.45" depth="0.01" color="#E74C3C"></a-box>
+                <a-box position="0 -0.05 0" width="0.01" height="0.10" depth="0.01" color="#E74C3C"></a-box>
             </a-entity>
+
+            <a-cylinder position="0 0 0.05" rotation="90 0 0" radius="0.03" height="0.015" color="#111111"></a-cylinder>
+
         </a-entity>
-
     </a-scene>
 
     <script src="app.js"></script>
