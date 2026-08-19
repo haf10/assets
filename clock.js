@@ -26,13 +26,13 @@ function updateClock() {
     const secondHand = document.getElementById("secondHand");
 
     if (hourHand) {
-        hourHand.setAttribute("rotation", `-90 0 ${-hourAngle}`);
+        hourHand.setAttribute("rotation", `0 0 ${-hourAngle}`);
     }
     if (minuteHand) {
-        minuteHand.setAttribute("rotation", `-90 0 ${-minuteAngle}`);
+        minuteHand.setAttribute("rotation", `0 0 ${-minuteAngle}`);
     }
     if (secondHand) {
-        secondHand.setAttribute("rotation", `-90 0 ${-secondAngle}`);
+        secondHand.setAttribute("rotation", `0 0 ${-secondAngle}`);
     }
 
     const clock = document.getElementById("clock");
